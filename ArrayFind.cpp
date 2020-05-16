@@ -150,6 +150,7 @@ private:
     stack<int> stack1;
     stack<int> stack2;
 
+    // 12345旋转数组34512，求最小值 二分法
     int minNumberInRotateArray(vector<int> rotateArray) {
         if (rotateArray.size() == 0)
             return 0;
@@ -158,6 +159,9 @@ private:
         int end = rotateArray.size() - 1;
         while (begin < end)
         {
+            if (rotateArray[begin] < rotateArray[end])
+                return rotateArray[begin];
+
             int mid = begin + (end - begin) / 2;
 
             if (rotateArray[mid] > rotateArray[begin])
@@ -165,9 +169,59 @@ private:
             else if (rotateArray[mid] < rotateArray[end])
                 end = mid;
             else
-                end = end - 1;
+                begin ++;
         }
 
         return rotateArray[begin];
+    }
+
+    // 求斐波那契数列
+    int Fibonacci(int n) {
+        if (n == 0)
+            return 0;
+
+        if (n <= 2)
+            return 1;
+
+        return Fibonacci(n - 1) + Fibonacci(n - 2);
+    }
+
+    // 这个动态规划太秀了
+    int Fibonacci(int n) {
+        int f = 0, g = 1;
+        while(n--) {
+            g += f;
+            f = g - f;
+        }
+        return f;
+    }
+
+    // 第n次跳法就是以1开头(fn-1)还是以2开头（fn-2）
+    int jumpFloor(int number) {
+        if(number < 0)
+            return 0;
+        
+        if(number == 1 || number == 2)
+            return number;
+
+        return jumpFloor(number - 1) + jumpFloor(number - 2);
+    }
+
+    // 可以一次跳n格，第n次变为fn-1+fn-2+......+f2+f1
+    int jumpFloorII(int number) {
+        if(number == 1)
+            return 1;
+        
+        return 2 * jumpFloorII(number - 1);
+    }
+
+    int rectCover(int number) {
+        if(number < 0)
+            return 0;
+        
+        if(number == 1 || number == 2)
+            return number;
+
+        return rectCover(number - 1) + rectCover(number - 2);
     }
 };
