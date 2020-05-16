@@ -1,4 +1,5 @@
-#include<vector>  
+#include<vector>
+#include<stack>   
 using namespace std;  
   
 class Solution {
@@ -82,6 +83,8 @@ public:
         return re;
     }
 
+    // 已知树的前序和中序，求树。
+    // 前序知道根，利用根在中序找到左右子树。
     struct TreeNode 
     {
         int val;
@@ -113,6 +116,58 @@ private:
 
         return root;
     }
+
+
 };
 
+class Solution2
+{
+public:
 
+    // 利用两个队列实现栈：一个栈保存数据，一个栈用于把数据倒过来
+    // 思考两个栈实现队列
+    void push(int node) {
+        stack1.push(node);
+    }
+
+    int pop() {
+        if(stack2.empty())
+        {
+            while(!stack1.empty())
+            {
+                int a = stack1.top();
+                stack2.push(a);
+                stack1.pop();
+            }
+        }
+        int a = stack2.top();
+        stack2.pop();
+
+        return a;
+    }
+
+private:
+    stack<int> stack1;
+    stack<int> stack2;
+
+    int minNumberInRotateArray(vector<int> rotateArray) {
+        if (rotateArray.size() == 0)
+            return 0;
+
+        int begin = 0;
+        int end = rotateArray.size() - 1;
+        while (begin < end)
+        {
+            int mid = begin + (end - begin) / 2;
+
+            if (rotateArray[mid] > rotateArray[begin])
+                begin = mid + 1;
+            else if (rotateArray[mid] < rotateArray[end])
+                end = mid;
+            else
+                end = end - 1;
+        }
+
+        return rotateArray[begin];
+    }
+};
