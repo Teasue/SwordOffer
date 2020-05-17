@@ -224,4 +224,91 @@ private:
 
         return rectCover(number - 1) + rectCover(number - 2);
     }
+
+    // 求一个整数的二进制中1的个数
+    // 将每一位和1求与
+    // 不能将n右移。因为负数最高位全部补位1
+    int  NumberOf1(int n) {
+        int count = 0;
+        int flag = 1;
+        while(flag != 0)
+        {
+            if ((n & flag) != 0)
+                count++;
+
+            flag = flag << 1;
+        }
+
+        return count;
+    }
+
+    // 如果一个整数不为0，那么这个整数至少有一位是1。如果我们把这个整数减1，那么原来处在整数最右边的1就会变为0，原来在1后面的所有的0都会变成1(如果最右边的1后面还有0的话)。其余所有位将不会受到影响。
+    int NumberOf1(int n) {
+        int count = 0;
+        while(n!= 0){
+            count++;
+            n = n & (n - 1);
+         }
+        return count;
+    }
+
+    // 一个数的n次方
+    double Power(double base, int exponent) {
+        double tmp = 1;
+        int n = exponent > 0 ? exponent : -exponent;
+        while (n != 0)
+        {
+            if ((n & 1) != 0)
+                tmp *= base;
+                
+            base *= base;
+            n = n >> 1;
+        }
+
+        return exponent > 0 ? tmp : (1/tmp);
+    }
+
+    // 将一个数组中奇数排在偶数前面
+    void reOrderArray(vector<int> &array) {
+        if (array.empty())
+            return;
+
+        int count = 0;
+        vector<int>::iterator itor;
+        for (itor = array.begin(); itor != array.end(); itor++)
+        {
+            if (*itor % 2 == 1)
+            {
+                int tmp = *itor;
+                array.erase(itor);
+                array.insert(array.begin() + count, tmp);
+                count++;
+            }
+        }
+    }
+    struct ListNode {
+	    int val;
+	    struct ListNode *next;
+	    ListNode(int x) :
+			val(x), next(NULL) { }
+    };
+
+    // 求链表的倒数第几个节点
+    // 两个指针追赶。相差为k
+    ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) {
+        if(pListHead == NULL || k==0)
+            return NULL;
+            
+        int n = 0;
+        ListNode *p = pListHead;
+        while(pListHead != NULL)
+        {
+            if (n >= k)
+                p = p->next;
+
+            n++;
+            pListHead = pListHead->next;
+        }
+        return n < k ? NULL : p;
+    }
 };
