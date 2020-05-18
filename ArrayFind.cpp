@@ -311,4 +311,79 @@ private:
         }
         return n < k ? NULL : p;
     }
+
+    // 反转链表
+    // Pre前一个，next是后一个，反过来
+    ListNode* ReverseList(ListNode* pHead) {
+        if (pHead == NULL)
+            return NULL;
+
+        ListNode *pre = NULL;
+        ListNode *next = NULL;
+        while(pHead != NULL)
+        {
+            next = pHead->next;
+            pHead->next = pre;
+            pre = pHead;
+            pHead = next;
+        }
+
+        return pre;
+    }
+
+    // 两个递增列表合并，保证递增
+    ListNode* Merge(ListNode* pHead1, ListNode* pHead2)
+    {
+        if(pHead1 == NULL)
+            return pHead2;
+
+        if(pHead2 == NULL)
+            return pHead1;
+        
+        ListNode* res = NULL;
+        if(pHead1->val <= pHead2->val)
+        {
+            res = pHead1;
+            res->next = Merge(pHead1->next, pHead2);
+        }
+        else
+        {
+            res = pHead2;
+            res->next = Merge(pHead2->next, pHead1);
+        }
+
+        return res;
+    }
+
+    struct TreeNode {
+	    int val;
+	    struct TreeNode *left;
+	    struct TreeNode *right;
+	    TreeNode(int x) :
+			val(x), left(NULL), right(NULL) {}
+    };
+    // 判断B是不是A的子结构
+    bool isSubtree(TreeNode* pRoot1, TreeNode* pRoot2)
+    {
+        if(pRoot2 == NULL)
+            return true;
+        if(pRoot1 == NULL)
+            return false;
+        if(pRoot2->val == pRoot1->val)
+        {
+            return isSubtree(pRoot1->left, pRoot2->left) 
+            && isSubtree(pRoot1->right, pRoot2->right);
+        }
+        else
+        {
+            return false;
+        }
+    }
+    bool HasSubtree(TreeNode* pRoot1, TreeNode* pRoot2)
+    {
+        if(pRoot1 == NULL || pRoot2 == NULL)
+            return false;
+
+        return isSubtree(pRoot1, pRoot2) || HasSubtree(pRoot1->left, pRoot2) || HasSubtree(pRoot1->right, pRoot2);
+    } 
 };
