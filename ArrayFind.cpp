@@ -386,4 +386,52 @@ private:
 
         return isSubtree(pRoot1, pRoot2) || HasSubtree(pRoot1->left, pRoot2) || HasSubtree(pRoot1->right, pRoot2);
     } 
+
+    // 镜像二叉树
+    void Mirror(TreeNode *pRoot) {
+        if(pRoot == NULL)
+            return;
+
+        TreeNode *tmp = pRoot->left;
+        pRoot->left = pRoot->right;
+        pRoot->right = tmp;
+
+        Mirror(pRoot->left);
+        Mirror(pRoot->right);
+    }
+
+    //输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字
+    vector<int> printMatrix(vector<vector<int> > matrix) {
+        vector<int> re;
+        int row = matrix.size();
+        int col = matrix[0].size();
+
+         if (row == 0 || col == 0)
+            return re;
+
+        int left = 0, top = 0, right = col - 1, bottom = row - 1;
+        while(left <= right && top <= bottom)
+        {
+            for (int i = left; i <= right; i++)
+                re.push_back(matrix[top][i]);
+
+            for (int j = top + 1; j <= bottom; j++)
+                re.push_back(matrix[j][right]);
+
+            if (top != bottom)
+            {
+                for (int m = right - 1; m >= left; m--)
+                    re.push_back(matrix[bottom][m]);
+            }
+
+            if (left != right)
+            {
+                for (int n = bottom - 1; n > top; n--)
+                    re.push_back(matrix[n][left]);
+            }
+
+            left++, top++, right--, bottom--;
+        }
+        return re;
+    }
 };
