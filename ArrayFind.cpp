@@ -1,5 +1,6 @@
 #include<vector>
-#include<stack>   
+#include<stack>
+#include<queue>     
 using namespace std;  
   
 class Solution {
@@ -433,5 +434,118 @@ private:
             left++, top++, right--, bottom--;
         }
         return re;
+    }
+};
+
+
+class Solution3 {
+public:
+    // 实现栈，能够得到栈中最小元素的min函数，O（1）时间复杂度
+    stack<int> s1;
+    stack<int> s2;
+    void push(int value) {
+        s1.push(value);
+
+        if (s2.empty() || s2.top() > value)
+            s2.push(value);
+    }
+    void pop() {
+        int re = s1.top();
+        s1.pop();
+
+        if(s2.top() == re)
+            s2.pop();
+    }
+    int top() {
+        return s1.top();
+    }
+    int min() {
+        return s2.top();
+    }
+
+    // 判断popV是不是pushV的弹出序列
+    bool IsPopOrder(vector<int> pushV,vector<int> popV) {
+        if (pushV.size() == 0)
+            return false;
+
+        vector<int> stack;
+        for (int i = 0, j = 0; i < pushV.size();)
+        {
+            stack.push_back(pushV[i++]);
+            while(j < popV.size() && stack.back() == popV[j])
+            {
+                stack.pop_back();
+                j++;
+            }
+        }
+
+        return stack.empty();
+    }
+
+    struct TreeNode {
+	    int val;
+	    struct TreeNode *left;
+	    struct TreeNode *right;
+	    TreeNode(int x) :
+			val(x), left(NULL), right(NULL) {}
+    };
+
+    // 从上往下打印出二叉树的每个节点，同层节点从左至右打印。
+    // 层次遍历，借助队列
+    vector<int> PrintFromTopToBottom(TreeNode* root) {
+        vector<int> re;
+        if(root == NULL)
+            return re;
+
+        queue<TreeNode *> q;
+        q.push(root);
+        while(!q.empty())
+        {
+            re.push_back(q.front()->val);
+            if(q.front()->left != NULL)
+                q.push(q.front()->left);
+
+            if(q.front()->right != NULL)
+                q.push(q.front()->right);
+
+            q.pop();
+        }
+
+        return re;
+    }
+
+    //输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
+    //如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。
+    //BST的后序序列的合法序列是，对于一个序列S，最后一个元素是x （也就是根），
+    //如果去掉最后一个元素的序列为T，那么T满足：T可以分成两段，前一段（左子树）小于x，
+    //后一段（右子树）大于x，且这两段（子树）都是合法的后序序列。
+    bool VerifySquenceOfBST(vector<int> sequence) {
+        if (sequence.size() == 0)
+            return false;
+
+        return isLastOrder(sequence, 0, sequence.size() -1);
+    }
+    bool isLastOrder(vector<int>& sequece, int b, int e)
+    {
+        if (b == e)
+            return true;
+    
+        int mid = b;
+        while(sequece[mid++] < sequece[e] && mid < e);
+
+        int tmp = mid;
+        while (sequece[tmp++] > sequece[e] && tmp < e);
+
+        if(tmp < e)
+            return false;
+ 
+        if(mid == b || mid == e)
+        {
+            return isLastOrder(sequece, b, e-1);
+        }
+        else
+        {
+            return (isLastOrder(sequece, b, mid-1) && isLastOrder(sequece, mid, e-1));
+        }
     }
 };
