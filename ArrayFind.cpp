@@ -548,4 +548,116 @@ public:
             return (isLastOrder(sequece, b, mid-1) && isLastOrder(sequece, mid, e-1));
         }
     }
+
+    //输入一颗二叉树的根节点和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。
+    //路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。
+    // dfs 深度搜素
+    vector<vector<int> > FindPath(TreeNode* root,int expectNumber) {
+        vector<vector<int>> ret;
+        vector<int> trace;
+
+        dfs(root, expectNumber, ret, trace);
+        return ret;
+    }
+    void dfs(TreeNode* root, int s, vector<vector<int>>& ret, vector<int>& trace)
+    {
+        if (root == NULL)
+            return;
+
+        trace.push_back(root->val);
+        if(s == root->val && root->left == NULL && root->right == NULL)
+            ret.push_back(trace);
+
+        s -= root->val;
+        if(root->left)
+            dfs(root->left, s, ret, trace);
+        
+        if(root->right)
+            dfs(root->right, s, ret, trace);
+
+        trace.pop_back();
+    }
+
+    struct RandomListNode {
+        int label;
+        struct RandomListNode *next, *random;
+        RandomListNode(int x) :
+                label(x), next(NULL), random(NULL) {
+        }
+    };
+    //输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，
+    //另一个特殊指针random指向一个随机节点），请对此链表进行深拷贝，并返回拷贝后的头结点。
+    //（注意，输出结果中请不要返回参数中的节点引用，否则判题程序会直接返回空）
+
+    /*
+        1、复制每个节点，如：复制节点A得到A1，将A1插入节点A后面
+        2、遍历链表，A1->random = A->random->next;
+        3、将链表拆分成原链表和复制后的链表
+    */
+    RandomListNode* Clone(RandomListNode* pHead)
+    {
+        if (pHead == NULL )
+            return NULL;
+        
+        RandomListNode *curnode = pHead;
+        while(curnode)
+        {
+            RandomListNode *tmpnode = new RandomListNode(curnode->label);
+            tmpnode->next = curnode->next;
+            curnode->next = tmpnode;
+            curnode = tmpnode->next;
+        }
+
+        curnode = pHead;
+        while(curnode)
+        {
+            RandomListNode *tmpnode = curnode->next;
+            if(curnode->random)
+                tmpnode->random = curnode->random->next;
+
+            curnode = tmpnode->next;
+        }
+
+        RandomListNode *re = pHead->next;
+        RandomListNode *tmp;
+        curnode = pHead;
+        while(curnode->next)
+        {
+            tmp = curnode->next;
+            curnode->next = tmp->next;
+            curnode = tmp;
+        }
+        return re;
+    }
+
+    //输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。
+    //要求不能创建任何新的结点，只能调整树中结点指针的指向。
+    TreeNode* Convert(TreeNode* pRootOfTree)
+    {
+        if (pRootOfTree == NULL)
+            return NULL;
+
+        TreeNode *tmp = NULL;
+        converthelper(pRootOfTree, tmp);
+        TreeNode *re = pRootOfTree;
+        while(re->left)
+            re = re->left;
+
+        return re;
+    }
+    void converthelper(TreeNode* cur, TreeNode*& pre)
+    {
+        if (cur == NULL)
+            return;
+
+        converthelper(cur->left, pre);
+
+        cur->left = pre;
+        if (pre)
+            pre->right = cur;
+
+        pre = cur;
+
+        converthelper(cur->right, pre);
+    }
 };
