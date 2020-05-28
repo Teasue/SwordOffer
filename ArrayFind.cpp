@@ -1,6 +1,7 @@
 #include<vector>
 #include<stack>
-#include<queue>     
+#include<queue>
+#include<string>       
 using namespace std;  
   
 class Solution {
@@ -659,5 +660,108 @@ public:
         pre = cur;
 
         converthelper(cur->right, pre);
+    }
+
+    //输入一个字符串,按字典序打印出该字符串中字符的所有排列。
+    //例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。
+    //fun(a,b,c) = a+(fun(b,c)) + (a和b交换)b+(fun(a,c)) + (a和c交换)c+(fun(b,a))
+    //fun(b,c) = b+fun(c) + (b和c交换)c+(fun(b))
+    //fun(c) = 1
+    vector<string> Permutation(string str) {
+        vector<string> re;
+        if (str.size() == 0)
+            return re;
+
+        Permutation(str, 0, re);
+        sort(re.begin(), re.end());
+        return re;
+    }
+    void Permutation(string str, int begin, vector<string>& re)
+    {
+        if (begin == str.size() - 1)
+        {
+            if(find(re.begin(), re.end(), str) == re.end())
+                re.push_back(str);
+        }
+        else
+        {
+            for (int i = begin; i < str.size(); i ++)
+            {
+                swap(str[i], str[begin]);
+                Permutation(str, begin + 1, re);
+                swap(str[begin], str[i]);
+            }
+        }
+    }
+
+    void swap(char &a, char &b)
+    {
+        char tmp = a;
+        a = b;
+        b = tmp;
+    }
+
+    //数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
+    //例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，
+    //超过数组长度的一半，因此输出2。如果不存在则输出0。
+    int MoreThanHalfNum_Solution(vector<int> numbers) {
+        if (numbers.empty())
+            return 0;
+
+        sort(numbers.begin(), numbers.end());
+        int mid = numbers[numbers.size() / 2];
+
+        int re = 0;
+        for (int i = 0; i < numbers.size(); i ++)
+        {
+            if(numbers[i] == mid)
+                re ++;
+        }
+        return (re > numbers.size() / 2) ? mid : 0;
+    }
+
+    //如果有符合条件的数字，则它出现的次数比其他所有数字出现的次数和还要多。
+    //在遍历数组时保存两个值：一是数组中一个数字，一是次数。遍历下一个数字时，
+    //若它与之前保存的数字相同，则次数加1，否则次数减1；若次数为0，则保存下一个数字，并将次数置为1。
+    //遍历结束后，所保存的数字即为所求。然后再判断它是否符合条件即可。
+    int MoreThanHalfNum_Solution(vector<int> numbers) {
+        int n = numbers.size();
+        if (n == 0) return 0;
+         
+        int num = numbers[0], count = 1;
+        for (int i = 1; i < n; i++) {
+            if (numbers[i] == num) count++;
+            else count--;
+            if (count == 0) {
+                num = numbers[i];
+                count = 1;
+            }
+        }
+        // Verifying
+        count = 0;
+        for (int i = 0; i < n; i++) {
+            if (numbers[i] == num) count++;
+        }
+        if (count * 2 > n) return num;
+        return 0;
+    }
+
+    //输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4,。
+    vector<int> GetLeastNumbers_Solution(vector<int> input, int k) {
+        vector<int> re;
+        if (input.empty() || k > input.size())
+            return re;
+
+        sort(input.begin(), input.end());
+
+        for (int i = 0; i < k; i++)
+            re.push_back(input[i]);
+
+        return re;
+    }
+
+    //计算连续子向量的最大和,向量中包含负数,是否应该包含某个负数,并期望旁边的正数会弥补它
+    int FindGreatestSumOfSubArray(vector<int> array) {
+    
     }
 };
