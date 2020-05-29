@@ -1,7 +1,8 @@
 #include<vector>
 #include<stack>
 #include<queue>
-#include<string>       
+#include<string>
+#include<math.h>       
 using namespace std;  
   
 class Solution {
@@ -761,7 +762,53 @@ public:
     }
 
     //计算连续子向量的最大和,向量中包含负数,是否应该包含某个负数,并期望旁边的正数会弥补它
+    //max（i）=max（max（i-1）+array[i] ， array[i]）
+    //res=max（res，F（i））
     int FindGreatestSumOfSubArray(vector<int> array) {
-    
+        int re = array[0];
+        int max = array[0];
+        for (int i = 1; i < array.size(); i++)
+        {
+            max = fmax(array[i] + max, array[i]);
+            re = fmax(max, re);
+        }
+
+        return re;
+    }
+
+    //求出任意非负整数区间中1出现的次数（从1 到 n 中1出现的次数）。
+    int NumberOf1Between1AndN_Solution(int n)
+    {
+        int count = 0;
+        int i = 1;
+        for (i = 1; i <= n; i *= 10)
+        {
+            int a = n / i;
+            int b = n % i;
+            count = count + (a + 8) / 10 * i + (a % 10 == 1) * (b + 1);
+        }
+        return count;
+    }
+
+    //输入一个正整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+    //例如输入数组{3，32，321}，则打印出这三个数字能排成的最小数字为321323。
+    string PrintMinNumber(vector<int> numbers) {
+        string re = "";
+        sort(numbers.begin(), numbers.end(), compare);
+        for (int i = 0; i < numbers.size(); i ++)
+            re += to_string(numbers[i]);
+
+        return re;
+    }
+    static bool compare(int a, int b)
+    {
+        string A = "";
+        string B = "";
+        A += to_string(a);
+        A += to_string(b);
+        B += to_string(b);
+        B += to_string(a);
+
+        return A < B;
     }
 };
